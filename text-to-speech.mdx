@@ -1,0 +1,221 @@
+---
+title: "Text to Speech"
+description: "How to synthesize text to speech using the Smallest AI API"
+slug: "/text-to-speech"
+---
+<div class="doc-container">
+# Text to Speech
+
+## How to use Text to Speech
+
+Learn how to synthesize your text using the **Smallest AI API**.  
+In this tutorial, you will learn how to use the Smallest AI platform to synthesize text to speech both **synchronously** and **asynchronously**. By the end of this tutorial, you will be able to convert text into speech using our API.
+
+<div class="dg-callout">
+You can access the source code for the Python SDK on our [GitHub repository](https://github.com/smallest-inc/smallest-python-sdk).
+</div>
+
+---
+
+## Requirements
+
+Before you begin, ensure you have the following:
+
+* Python (**3.9 or higher**) installed on your machine.
+* An **API key** from the Smallest AI platform (sign up [here](https://smallest.ai/signup)).
+
+---
+
+## Setup
+
+### Install our SDK
+
+<div class="dg-code">
+```bash
+pip install smallestai
+```
+</div>
+
+### Set your API key as an environment variable
+
+<div class="dg-code">
+```bash
+export SMALLEST_API_KEY=YOUR_API_KEY
+```
+</div>
+
+---
+
+## Synchronous Text to Speech
+
+Here is an example of how to synthesize text to speech synchronously:
+
+<div class="dg-callout">
+If you are using a **voice\_id** corresponding to a voice clone, you should explicitly set the **model** parameter to **"lightning-large"** in the Smallest client or payload.
+</div>
+
+<div class="code-tabs">
+
+<input type="radio" id="tab1" name="sync-tabs" checked/>
+<label class="tab" for="tab1">Python</label>
+
+<input type="radio" id="tab2" name="sync-tabs"/>
+<label class="tab" for="tab2">cURL</label>
+
+<input type="radio" id="tab3" name="sync-tabs"/>
+<label class="tab" for="tab3">JavaScript</label>
+
+<div class="panes">
+
+<div id="pane1" class="pane">
+<div class="lang-label">Python</div>
+<div class="dg-code">
+```python
+from smallestai.waves import WavesClient
+
+def main():
+    client = WavesClient(api_key="SMALLEST_API_KEY")
+    audio = client.synthesize(
+        "Hello, this is a test for sync synthesis function."
+    )
+    with open("sync_synthesize.wav", "wb") as f:
+        f.write(audio)
+
+if __name__ == "__main__":
+    main()
+```
+</div>
+</div>
+
+<div id="pane2" class="pane">
+<div class="lang-label">cURL</div>
+<div class="dg-code">
+```bash
+curl -X POST "https://api.smallest.ai/v1/tts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '<"text":"Hello, this is a test for sync synthesis function.">' \
+  ---output sync_synthesize.wav
+```
+</div>
+</div>
+
+<div id="pane3" class="pane">
+<div class="lang-label">JavaScript</div>
+<div class="dg-code">
+```javascript
+import Smallest from "smallestai";
+import * as fs from 'fs/promises';
+
+const client = new Smallest(< apiKey: process.env.SMALLEST_API_KEY >);
+
+async function main() <
+  const audio = await client.waves.synthesize(<
+    text: "Hello, this is a test for sync synthesis function.",
+  >);
+  await fs.writeFile("sync_synthesize.wav", audio);
+  console.log("Audio saved to sync_synthesize.wav");
+>
+
+main();
+```
+</div>
+</div>
+
+</div> 
+
+</div> 
+
+---
+
+## Asynchronous Text to Speech
+
+Here is an example of how to synthesize text to speech asynchronously:
+
+<div class="dg-callout">
+If you are using a **voice\_id** corresponding to a voice clone, you should explicitly set the **model** parameter to **"lightning-large"** in the Smallest client or payload.
+</div>
+
+<div class="code-tabs">
+
+<input type="radio" id="tab4" name="async-tabs" checked/>
+<label class="tab" for="tab4">Python</label>
+
+<div class="panes">
+
+<div id="pane4" class="pane">
+<div class="lang-label">Python</div>
+<div class="dg-code">
+```python
+import asyncio
+import aiofiles
+from smallestai.waves import AsyncWavesClient
+
+async def main():
+    client = AsyncWavesClient(api_key="SMALLEST_API_KEY")
+    async with client as tts:
+        audio_bytes = await tts.synthesize("Hello, this is a test of the async synthesis function.")
+        
+        async with aiofiles.open("async_synthesize.wav", "wb") as f:
+            await f.write(audio_bytes)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+</div>
+</div>
+
+</div> 
+
+</div> 
+
+---
+
+## Parameters
+
+These parameters are part of the **Smallest** and **AsyncSmallest** instance. They can be set when creating the instance. However, the **synthesize()** function also accepts **kwargs**, allowing you to override any of these parameters on a per-request basis.
+
+* **api\_key** (*str*): Your API key (can be set via SMALLEST\_API\_KEY environment variable)
+* **model** (*str*): TTS model to use (default: **lightning**, available: **lightning**, **lightning-large**)
+* **sample\_rate** (*int*): Audio sample rate (default: **24000**)
+* **voice\_id** (*str*): Voice ID (default: **“emily”**)
+* **speed** (*float*): Speech speed multiplier (default: **1.0**)
+* **consistency** (*float*): Controls word repetition and skipping. Decrease it to prevent skipped words, and increase it to prevent repetition. Only supported in **lightning-large** model. (default: **0.5**)
+* **similarity** (*float*): Controls the similarity between the synthesized audio and the reference audio. Increase it to make the speech more similar to the reference audio. Only supported in **lightning-large** model. (default: **0**)
+* **enhancement** (*boolean*): Enhances speech quality at the cost of increased latency. Only supported in **lightning-large** model. (default: **False**)
+* **language** (*str*): Language code, available languages can be found [here](https://smallest.ai/docs/languages) (default: **“en”**)
+* **output\_format** (*str*): The format of the output audio. Available options: **pcm**, **mp3**, **wav**, **mulaw** (default: **“wav”**)
+
+### Override Example
+
+For example, you can modify the speech speed and sample rate just for a particular synthesis request:
+
+<div class="dg-code">
+```python
+audio_bytes = client.synthesize(
+    "Modern problems don't always require modern solutions.",
+    speed=1.5,  # Overrides default speed
+    sample_rate=16000  # Overrides default sample rate
+)
+```
+</div>
+
+---
+
+## Conclusion
+
+The Smallest AI Text-to-Speech SDK offers both synchronous and asynchronous options, catering to a variety of use cases:
+
+* **Synchronous TTS**: Ideal for applications where **immediate responses** are needed, such as real-time voice assistants, chatbot integrations, or interactive voice systems. It ensures that the audio is generated and available instantly for use within the same execution flow.
+* **Asynchronous TTS**: Designed for scenarios that involve handling **multiple requests or large-scale processing**. For example, if you need to convert multiple text inputs into speech concurrently, such as creating audio files for an audiobook or processing a batch of text-based announcements, asynchronous TTS allows you to execute these tasks efficiently without blocking other operations. This approach ensures **scalability** and optimal resource utilization, particularly in environments where time and performance are critical.
+
+By understanding these modes and tailoring their usage to specific requirements, you can build highly responsive, scalable, and efficient solutions using the Smallest AI platform.
+
+If you have any questions or suggestions, please create an issue on the [Smallest AI Python SDK GitHub repository](https://github.com/smallest-inc/smallest-python-sdk).
+
+<div class="dg-footer">
+  <div class="meta">© 2025 Smallest AI • Docs</div>
+  <div class="powered">Built with fern</div>
+</div>
+
+</div> 

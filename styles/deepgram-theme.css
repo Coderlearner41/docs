@@ -1,0 +1,211 @@
+/* deepgram-style theme tokens */
+
+@font-face {
+    font-family: 'InterVar';
+    src: local('Inter'), local('InterVar');
+    font-display: swap;
+  }
+  :root{
+    --dg-bg: #0b0b0c;
+    --dg-surface: #0f0f11;
+    --dg-muted: rgba(225,225,229,0.55);
+    --dg-text: #e1e1e6;
+    --dg-accent: #1bd69a;
+    --dg-highlight: #16c286;
+    --dg-border: rgba(255,255,255,0.06);
+    --dg-code-bg: #0b0b0c;
+    --dg-card: #0e0f11;
+    --dg-radius: 10px;
+    --max-width: 920px;
+    --sidebar-width: 280px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    font-family: InterVar, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  
+  /* page background & content */
+  body {
+    background: var(--dg-bg);
+    color: var(--dg-text);
+    line-height: 1.58;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* --- LAYOUT CONTAINER (NEW) --- */
+  .page-layout {
+      display: flex;
+      padding-left: var(--sidebar-width); /* Make room for the fixed sidebar */
+  }
+
+  /* --- SIDEBAR CONTAINER (NEW) --- */
+  .sidebar-container {
+      width: var(--sidebar-width); /* 280px */
+      position: fixed; 
+      top: 0;
+      left: 0;
+      height: 100vh;
+      background: var(--dg-surface); /* #0f0f11 */
+      overflow-y: auto; /* Enables the scroller */
+      padding-top: 60px; /* Space for a mock header bar */
+  }
+
+  .sidebar-content {
+      padding: 20px 0;
+  }
+
+  .nav-section {
+      margin-bottom: 24px;
+      /* Style links as list items */
+      list-style: none;
+  }
+
+  .nav-section h3 {
+      padding: 0 20px;
+      margin-bottom: 10px;
+      font-size: 0.85rem; /* Smaller for sidebar headers */
+      color: var(--dg-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+  }
+
+  .nav-section li {
+      padding: 8px 20px;
+      font-size: 0.95rem;
+      color: var(--dg-muted);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.1s;
+  }
+
+  .nav-section li:hover {
+    color: var(--dg-text);
+  }
+
+  /* Active link style */
+  .sub-menu-active {
+    /* Style for the active dropdown */
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .sub-menu-active li {
+      padding-left: 30px; /* Indent sub-items */
+  }
+
+  .sub-menu-active li.active-page { /* Active page styling */
+      background: rgba(27, 214, 154, 0.15); /* Highlight background */
+      color: var(--dg-accent);
+      font-weight: 600;
+      border-left: 3px solid var(--dg-accent);
+      padding-left: 27px; /* Adjust padding due to border */
+  }
+
+  /* End of Sidebar styles */
+
+  /* container */
+  .doc-container {
+    max-width: var(--max-width);
+    /* Removed margin: 0 auto; as it's now controlled by page-layout */
+    padding: 40px 20px;
+    flex-grow: 1; /* Allows it to take up available space */
+  }
+  
+  /* headings */
+  h1{ font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+  h2{ font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 1.25rem; }
+  h3{ font-size: 1.05rem; font-weight: 600; color: var(--dg-text); }
+  
+  /* subtle card blocks (callout/info) */
+  .dg-callout {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+    border: 1px solid var(--dg-border);
+    color: var(--dg-muted);
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin: 18px 0;
+  }
+  
+  /* code / code block look */
+  pre, code {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: #dbeafe;
+  }
+  
+  /* large code block */
+  .dg-code {
+    background: #050506;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid rgba(255,255,255,0.04);
+    overflow: auto;
+    margin: 14px 0 24px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.5);
+  }
+  
+  /* styled small code pill (inline) */
+  .kbd {
+    background: rgba(255,255,255,0.03);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--dg-text);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+  
+  /* code tab UI: CSS-only tabs using radio inputs */
+  .code-tabs { width:100%; border-radius:12px; background:var(--dg-code-bg); border:1px solid var(--dg-border); overflow:hidden; }
+  .code-tabs .tabs { display:flex; gap:8px; padding:12px; background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01)); }
+  .code-tabs input[type="radio"]{ display:none; }
+  .code-tabs label.tab {
+    cursor:pointer;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:600;
+    font-size:0.95rem;
+    color:var(--dg-muted);
+    background:transparent;
+    border:1px solid transparent;
+  }
+  .code-tabs label.tab:hover{ color:var(--dg-text); }
+  .code-tabs input[type="radio"]:checked + label {
+    color: #0b0b0c;
+    background: linear-gradient(180deg,var(--dg-accent),var(--dg-highlight));
+    box-shadow: 0 6px 18px rgba(11,11,12,0.4);
+  }
+  
+  /* content panes */
+  .code-tabs .pane { display:none; padding: 18px; }
+  .code-tabs input[type="radio"]#tab1:checked ~ .panes #pane1,
+  .code-tabs input[type="radio"]#tab2:checked ~ .panes #pane2,
+  .code-tabs input[type="radio"]#tab3:checked ~ .panes #pane3 {
+    display:block;
+  }
+  
+  /* language label inside code */
+  .lang-label { display:inline-block; font-family:var(--mono); font-weight:700; font-size:0.78rem; color:var(--dg-accent); margin-bottom:8px; }
+  
+  /* footer */
+  .dg-footer {
+    margin-top: 60px;
+    padding: 28px 18px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+    color: var(--dg-muted);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: 18px;
+  }
+  .dg-footer .meta { font-size:0.95rem; }
+  .dg-footer .powered { display:flex; align-items:center; gap:10px; font-weight:600; color:var(--dg-muted); }
+  
+  /* responsive small screens */
+  @media (max-width:900px){
+    .page-layout { padding-left: 0; } /* Remove fixed sidebar space */
+    .sidebar-container { display: none; } /* Hide sidebar on mobile */
+    .doc-container{ padding: 20px; }
+    .code-tabs .tabs{ flex-wrap:wrap; }
+  }
